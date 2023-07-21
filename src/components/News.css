@@ -1,0 +1,19 @@
+.footer{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 150px;
+}
+
+.list ul li{
+    list-style-type: none;
+}
+.list ul li a{
+    color: white;
+    text-decoration: none;
+}
+.list ul li a:hover{
+    color: yellow;
+    text-decoration: underline;
+}
+
