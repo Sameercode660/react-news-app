@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 150px;
 }
 
 .list ul li{
@@ -15,5 +14,11 @@
 .list ul li a:hover{
     color: yellow;
     text-decoration: underline;
+}
+
+@media only screen and (max-width:1024px){
+    .container{
+        width: 100vw;
+    }
 }
 

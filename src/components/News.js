@@ -1,125 +1,64 @@
 import NewsItem from "./NewsItem";
 import "./News.css";
 import { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import React from "react";
+import Spinner from "./Spinner";
+import { useEffect } from "react";
+import Footer from "./Footer";
 
 export default function News() {
   let [dataObject, setDataObject] = useState([]);
-
+  let [totalResult, setTotalResult] = useState(0)
   let [page, setPage] = useState(1);
+  let [load, setLoad] = useState(true)
+
   async function fetchingData() {
     let response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b80b074d23d74065905535ad044bbf0e&page=${page}&pageSize=15`
+      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=fb98ecc91dc847508d7619cd75a4ba82&page=${page}&pageSize=15`
     );
     let data = await response.json();
+    setLoad(false)
+    setTotalResult(data.totalResults)
     setDataObject(data.articles);
   }
 
-  async function handlePrevious() {
-    setPage(page-1)
-    let response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b80b074d23d74065905535ad044bbf0e&page=${page}&pageSize=15`
-    );
-    let data = await response.json();
-    setDataObject(data.articles);
-  }
+ 
 
   async function handleNext() {
-    setPage(page+1)
+    setPage(page + 1);
     let response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=b80b074d23d74065905535ad044bbf0e&page=${page}&pageSize=15`
+      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=fb98ecc91dc847508d7619cd75a4ba82&page=${page}&pageSize=15`
     );
     let data = await response.json();
-    setDataObject(data.articles);
+    console.log(dataObject.length)
+    setDataObject(dataObject.concat(data.articles));
   }
   function triggerData() {
     fetchingData();
   }
+  useEffect(triggerData, [])
   return (
     <>
       <div className="container">
-        {dataObject.map((element) => {
-          return (
-            <NewsItem
-              title={element.title}
-              url={element.url}
-              urlToImage={element.urlToImage}
-            ></NewsItem>
-          );
-        })}
-      </div>
-      <div
-        style={{ marginBottom: "20px" }}
-        className=" my-4 container d-flex justify-content-between"
-      >
-        <button
-          type="button"
-          disabled={page <= 1}
-          class="btn btn-outline-primary"
-          onClick={handlePrevious}
+        <InfiniteScroll
+          dataLength={dataObject.length}
+          next={handleNext}
+          hasMore={dataObject.length < totalResult}
+          loader={<Spinner></Spinner>}
         >
-          &larr; Previous
-        </button>
-        <button type="button" class="btn btn-outline-primary"
-          onClick={handleNext}
-        >
-          Next &rarr;
-        </button>
+          {load ? <Spinner></Spinner> : dataObject.map((element) => {
+            return (
+              <NewsItem
+                title={element.title}
+                url={element.url}
+                urlToImage={element.urlToImage}
+              ></NewsItem>
+            );
+          })}
+        </InfiniteScroll>
       </div>
-      <div className="loadButton">
-        <button className="btn btn-outline-primary my-4" onClick={triggerData}>
-          Load News
-        </button>
-      </div>
-      <div className="footer bg-dark">
-        <div className="list1-link list">
-          <ul>
-            <li>
-              <a href="">Daily News</a>
-            </li>
-            <li>
-              <a href="">Weekly News</a>
-            </li>
-            <li>
-              <a href="">Monthly News</a>
-            </li>
-            <li>
-              <a href="">Local News</a>
-            </li>
-          </ul>
-        </div>
-        <div className="list2-link list">
-          <ul>
-            <li>
-              <a href="">Daily News</a>
-            </li>
-            <li>
-              <a href="">Weekly News</a>
-            </li>
-            <li>
-              <a href="">Monthly News</a>
-            </li>
-            <li>
-              <a href="">Local News</a>
-            </li>
-          </ul>
-        </div>
-        <div className="list3-link list">
-          <ul>
-            <li>
-              <a href="">Daily News</a>
-            </li>
-            <li>
-              <a href="">Weekly News</a>
-            </li>
-            <li>
-              <a href="">Monthly News</a>
-            </li>
-            <li>
-              <a href="">Local News</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <Footer></Footer>
     </>
   );
 }
