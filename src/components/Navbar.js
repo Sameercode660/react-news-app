@@ -1,10 +1,13 @@
-import './Navbar.css'
+import "./Navbar.css";
+import React from "react";
 
-
-export default function Navbar() {
+export default function Navbar({switchToDark}) {
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary"  data-bs-theme="dark">
+      <nav
+        className="navbar navbar-expand-lg bg-body-tertiary"
+        data-bs-theme="dark"
+      >
         <div className="container-fluid ">
           <a className="navbar-brand" href="#">
             DailyNews
@@ -33,6 +36,17 @@ export default function Navbar() {
                 </a>
               </li>
             </ul>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="flexSwitchCheckDefault"
+                onClick={switchToDark}
+              />
+              <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
+                Default switch checkbox input
+              </label>
+            </div>
           </div>
         </div>
       </nav>
